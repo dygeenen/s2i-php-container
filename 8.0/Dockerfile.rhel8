@@ -78,8 +78,8 @@ RUN INSTALL_PREREQUIS="gcc-c++ gcc php-devel php-pear yum-utils" && \
     yum -y clean all --enablerepo='*'
     
 # MONGODB
-#RUN pecl install mongodb && \
-#    echo extension=mongodb.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-mongodb.ini
+RUN pecl install mongodb && \
+    echo extension=mongodb.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-mongodb.ini
 
 # MSSQL
 RUN curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/mssql-release.repo && \
