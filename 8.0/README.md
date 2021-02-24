@@ -1,11 +1,8 @@
-PHP 7.4 container image
+PHP 8.0 container image
 =======================
 
-This container image includes PHP 7.4 as a [S2I](https://github.com/openshift/source-to-image) base image for your PHP 7.4 applications.
-Users can choose between RHEL and CentOS based builder images.
+This container image includes PHP 8.0 as a [S2I](https://github.com/openshift/source-to-image) base image for your PHP 8.0 applications.
 The RHEL UBI images are available in the [Red Hat Container Catalog](https://access.redhat.com/containers/),
-the CentOS images are available on [Quay.io](https://quay.io/organization/centos7),
-and the Fedora images are available in [Fedora Registry](https://registry.fedoraproject.org/).
 The resulting image can be run using [podman](https://github.com/containers/libpod).
 
 Note: while the examples in this README are calling `podman`, you can replace any such calls by `docker` with the same arguments
@@ -13,8 +10,8 @@ Note: while the examples in this README are calling `podman`, you can replace an
 Description
 -----------
 
-PHP 7.4 available as container is a base platform for
-building and running various PHP 7.4 applications and frameworks.
+PHP 8.0 available as container is a base platform for
+building and running various PHP 8.0 applications and frameworks.
 PHP is an HTML-embedded scripting language. PHP attempts to make it easy for developers 
 to write dynamically generated web pages. PHP also offers built-in database integration 
 for several commercial and non-commercial database management systems, so writing 
@@ -28,12 +25,12 @@ the nodejs itself is included just to make the npm work.
 
 Usage in OpenShift
 ------------------
-In this example, we will assume that you are using the `ubi8/php-74` image, available via `php:74` imagestream tag in Openshift.
+In this example, we will assume that you are using the `dygeenen/s2i-php:latest` image, available via `php:80-dygeenen` imagestream tag in Openshift.
 
 To build a simple [cakephp-sample-app](https://github.com/sclorg/cakephp-ex.git) application in Openshift:
 
 ```
-oc new-app php:7.4~https://github.com/sclorg/cakephp-ex.git
+oc new-app php:80-dygeenen~https://github.com/sclorg/cakephp-ex.git
 ```
 
 To access the application:
@@ -72,10 +69,10 @@ To use the PHP image in a Dockerfile, follow these steps:
 #### 1. Pull a base builder image to build on
 
 ```
-podman pull ubi8/php-74
+podman pull dygeenen/s2i-php:latest
 ```
 
-An UBI image `ubi8/php-74` is used in this example. This image is usable and freely redistributable under the terms of the UBI End User License Agreement (EULA). See more about UBI at [UBI FAQ](https://developers.redhat.com/articles/ubi-faq).
+An UBI image `dygeenen/s2i-php:latest` is used in this example. This image is usable and freely redistributable under the terms of the UBI End User License Agreement (EULA). See more about UBI at [UBI FAQ](https://developers.redhat.com/articles/ubi-faq).
 
 #### 2. Pull an application code
 
@@ -97,7 +94,7 @@ For all these three parts, users can either setup all manually and use commands 
 
 ##### 3.1. To use your own setup, create a Dockerfile with this content:
 ```
-FROM ubi8/php-74
+FROM dygeenen/s2i-php:latest
 
 # Add application sources
 ADD app-src .
@@ -123,7 +120,7 @@ CMD /usr/libexec/s2i/run
 
 ##### 3.2. To use the Source-to-Image scripts and build an image using a Dockerfile, create a Dockerfile with this content:
 ```
-FROM ubi8/php-74
+FROM dygeenen/s2i-php:latest
 
 # Add application sources to a directory that the assemble script expects them
 # and set permissions so that the container runs without root access
