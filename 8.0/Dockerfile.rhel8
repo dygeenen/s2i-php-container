@@ -84,8 +84,8 @@ RUN INSTALL_PREREQUIS="gcc-c++ gcc php-devel php-pear yum-utils" && \
 # MSSQL
 RUN curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/mssql-release.repo && \
     yum -y remove unixODBC-utf16 unixODBC-utf16-devel && \
-    dnf install -y https://www.rpmfind.net/linux/fedora/linux/releases/33/Everything/x86_64/os/Packages/l/libcom_err-1.45.6-4.fc33.i686.rpm && \
-    dnf install -y https://www.rpmfind.net/linux/fedora/linux/releases/33/Everything/x86_64/os/Packages/e/e2fsprogs-libs-1.45.6-4.fc33.i686.rpm && \
+    dnf install -y https://www.rpmfind.net/linux/fedora/linux/releases/33/Everything/x86_64/os/Packages/l/libcom_err-1.45.6-4.fc33.x86_64.rpm && \
+    dnf install -y https://www.rpmfind.net/linux/fedora/linux/releases/33/Everything/x86_64/os/Packages/e/e2fsprogs-libs-1.45.6-4.fc33.x86_64.rpm && \
     dnf install -y https://www.rpmfind.net/linux/fedora/linux/releases/33/Everything/x86_64/os/Packages/e/e2fsprogs-1.45.6-4.fc33.x86_64.rpm && \
     ACCEPT_EULA=Y yum  -y install msodbcsql17 && \
     ACCEPT_EULA=Y yum -y install mssql-tools && \
