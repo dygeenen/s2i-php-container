@@ -84,9 +84,10 @@ RUN pecl install mongodb && \
 # MSSQL
 RUN curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/mssql-release.repo && \
     yum -y remove unixODBC-utf16 unixODBC-utf16-devel && \
-    yum -y install unixODBC-devel && \
-    ACCEPT_EULA=Y yum -y install msodbcsql17 && \
+    ACCEPT_EULA=Y yum download -y msodbcsql17 && \
+    ACCEPT_EULA=Y rpm -Uvh --nodeps msodbcsql17*rpm && \
     ACCEPT_EULA=Y yum -y install mssql-tools && \
+    yum -y install unixODBC-devel && \
     rpm -V msodbcsql17 mssql-tools unixODBC-devel && \
 
 RUN pecl install sqlsrv && \
