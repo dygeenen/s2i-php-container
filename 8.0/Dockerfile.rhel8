@@ -94,6 +94,11 @@ RUN pecl install sqlsrv && \
 RUN pecl install pdo_sqlsrv && \
     echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
 
+
+# Display PHP extensions in log
+RUN php -v
+RUN php -m
+
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
