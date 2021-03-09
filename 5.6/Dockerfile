@@ -40,9 +40,9 @@ LABEL summary="${SUMMARY}" \
       usage="s2i build https://github.com/sclorg/s2i-php-container.git --context-dir=${PHP_VERSION}/test/test-app centos/${NAME}-${PHP_VER_SHORT}-centos7 sample-server" \
       maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
-RUN yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
-    yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
-    yum install yum-utils && \
+RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
+    yum -y install yum-utils && \
     yum-config-manager --enable remi-php56 
 
 # Install Apache httpd and PHP
