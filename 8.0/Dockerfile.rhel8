@@ -49,7 +49,8 @@ RUN yum -y module enable php:remi-$PHP_VERSION && \
     INSTALL_PKGS="php php-mysqlnd php-pgsql php-bcmath \
                   php-gd php-intl php-ldap php-mbstring php-pdo \
                   php-process php-soap php-opcache php-xml \
-                  php-gmp php-pecl-apcu mod_ssl hostname" && \
+                  php-gmp php-pecl-apcu mod_ssl hostname \
+                  ldb-devel libldap openldap-devel" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
     yum reinstall -y tzdata && \
     rpm -V $INSTALL_PKGS && \
@@ -96,7 +97,8 @@ RUN pecl install sqlsrv && \
     echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
 RUN pecl install pdo_sqlsrv && \
     echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
-
+RUN pecl install ldap && \
+    echo extension=ldap.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-ldap.ini
 
 # Display PHP extensions in log
 RUN php -v
