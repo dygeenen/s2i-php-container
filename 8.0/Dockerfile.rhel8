@@ -43,6 +43,9 @@ LABEL summary="${SUMMARY}" \
 # Enable EPEL and Remi Repository on CentOS/RHEL
 RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+    
+# Install CA 
+RUN dnf install -y ca-certificates
 
 # Install Apache httpd and PHP
 RUN yum -y module enable php:remi-$PHP_VERSION && \
