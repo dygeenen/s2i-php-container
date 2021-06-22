@@ -32,12 +32,11 @@ LABEL summary="${SUMMARY}" \
       io.openshift.tags="builder,${NAME},${NAME}${PHP_VER_SHORT},${NAME}-${PHP_VER_SHORT}" \
       io.openshift.s2i.scripts-url="image:///usr/libexec/s2i" \
       io.s2i.scripts-url="image:///usr/libexec/s2i" \
-      name="ubi8/${NAME}-${PHP_VER_SHORT}" \
+      name="centos8/${NAME}-${PHP_VER_SHORT}" \
       com.redhat.component="${NAME}-${PHP_VER_SHORT}-container" \
       version="1" \
-      com.redhat.license_terms="https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI" \
       help="For more information visit https://github.com/sclorg/s2i-${NAME}-container" \
-      usage="s2i build https://github.com/sclorg/s2i-php-container.git --context-dir=${PHP_VERSION}/test/test-app ubi8/${NAME}-${PHP_VER_SHORT} sample-server" \
+      usage="s2i build https://github.com/sclorg/s2i-php-container.git --context-dir=${PHP_VERSION}/test/test-app centos8/${NAME}-${PHP_VER_SHORT} sample-server" \
       maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
 # Enable EPEL, Remi and Yarn Repository on CentOS/RHEL
