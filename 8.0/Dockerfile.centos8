@@ -44,8 +44,8 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm && \
     curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo
 
-# Install Apache httpd, PHP and yarn
-RUN yum -y module enable php:remi-$PHP_VERSION && \
+# Install Apache httpd, PHP, nodejs v14 and yarn
+RUN yum -y module enable php:remi-$PHP_VERSION nodejs:14 && \
     INSTALL_PKGS="php php-mysqlnd php-pgsql php-bcmath \
                   php-gd php-intl php-ldap php-mbstring php-pdo \
                   php-process php-soap php-opcache php-xml \
@@ -53,7 +53,7 @@ RUN yum -y module enable php:remi-$PHP_VERSION && \
                   php-ldap php-pecl-igbinary php-pecl-imagick-im6 \
                   php-pecl-redis5 php-phpiredis php-pecl-zip yarn" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
-    yum install -y tzdata && \
+    yum install -y tzdata nodejs && \
     rpm -V $INSTALL_PKGS && \
     yum -y clean all --enablerepo='*'
 
