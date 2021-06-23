@@ -44,7 +44,7 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm && \
     curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo
 
-# Install Apache httpd and PHP
+# Install Apache httpd, PHP and yarn
 RUN yum -y module enable php:remi-$PHP_VERSION && \
     INSTALL_PKGS="php php-mysqlnd php-pgsql php-bcmath \
                   php-gd php-intl php-ldap php-mbstring php-pdo \
@@ -89,9 +89,7 @@ RUN pecl install mongodb && \
 # MSSQL
 RUN curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/mssql-release.repo && \
     yum -y remove unixODBC-utf16 unixODBC-utf16-devel && \
-    dnf install --allowerasing -y https://rpmfind.net/linux/centos/8-stream/BaseOS/x86_64/os/Packages/libcom_err-1.45.6-1.el8.x86_64.rpm \
-                                  https://rpmfind.net/linux/centos/8-stream/BaseOS/x86_64/os/Packages/e2fsprogs-libs-1.45.6-1.el8.x86_64.rpm \
-                                  https://rpmfind.net/linux/centos/8.3.2011/BaseOS/x86_64/os/Packages/e2fsprogs-1.45.6-1.el8.x86_64.rpm && \
+    yum -y install libcom_err e2fsprogs-libs e2fsprogs && \
     ACCEPT_EULA=Y yum  -y install msodbcsql17 && \
     ACCEPT_EULA=Y yum -y install mssql-tools && \
     yum -y install unixODBC-devel && \
