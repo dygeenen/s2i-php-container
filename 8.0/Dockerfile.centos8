@@ -1,4 +1,4 @@
-FROM centos/s2i-core-centos8
+FROM centos/s2i-core-centos8:1
 
 # This image provides an Apache+PHP environment for running PHP
 # applications.
@@ -13,6 +13,7 @@ EXPOSE 8443
 
 ENV PHP_VERSION=8.0 \
     PHP_VER_SHORT=80 \
+    NODEJS_VERSION=14 \
     NAME=php
 
 ENV SUMMARY="Platform for building and running PHP $PHP_VERSION applications" \
@@ -27,7 +28,7 @@ is probably as a replacement for CGI scripts."
 LABEL summary="${SUMMARY}" \
       description="${DESCRIPTION}" \
       io.k8s.description="${DESCRIPTION}" \
-      io.k8s.display-name="Apache 2.4 with PHP ${PHP_VERSION}" \
+      io.k8s.display-name="Apache 2.4 with PHP ${PHP_VERSION} NODEJS ${NODEJS_VERSION}" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,${NAME},${NAME}${PHP_VER_SHORT},${NAME}-${PHP_VER_SHORT}" \
       io.openshift.s2i.scripts-url="image:///usr/libexec/s2i" \
@@ -44,8 +45,8 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm && \
     curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo
 
-# Install Apache httpd, PHP, nodejs v14 and yarn
-RUN yum -y module enable php:remi-$PHP_VERSION nodejs:14 && \
+# Install Apache httpd, PHP, nodejs and yarn
+RUN yum -y module enable php:remi-$PHP_VERSION nodejs:$NODEJS_VERSION && \
     INSTALL_PKGS="php php-mysqlnd php-pgsql php-bcmath \
                   php-gd php-intl php-ldap php-mbstring php-pdo \
                   php-process php-soap php-opcache php-xml \
