@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/s2i-base:1
+FROM centos/s2i-core-centos8:1
 
 # This image provides an Apache+PHP environment for running PHP
 # applications.
@@ -13,6 +13,7 @@ EXPOSE 8443
 
 ENV PHP_VERSION=8.0 \
     PHP_VER_SHORT=80 \
+    NODEJS_VERSION=14 \
     NAME=php
 
 ENV SUMMARY="Platform for building and running PHP $PHP_VERSION applications" \
@@ -27,17 +28,16 @@ is probably as a replacement for CGI scripts."
 LABEL summary="${SUMMARY}" \
       description="${DESCRIPTION}" \
       io.k8s.description="${DESCRIPTION}" \
-      io.k8s.display-name="Apache 2.4 with PHP ${PHP_VERSION}" \
+      io.k8s.display-name="Apache 2.4 with PHP ${PHP_VERSION} NODEJS ${NODEJS_VERSION}" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,${NAME},${NAME}${PHP_VER_SHORT},${NAME}-${PHP_VER_SHORT}" \
       io.openshift.s2i.scripts-url="image:///usr/libexec/s2i" \
       io.s2i.scripts-url="image:///usr/libexec/s2i" \
-      name="ubi8/${NAME}-${PHP_VER_SHORT}" \
+      name="centos8/${NAME}-${PHP_VER_SHORT}" \
       com.redhat.component="${NAME}-${PHP_VER_SHORT}-container" \
       version="1" \
-      com.redhat.license_terms="https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI" \
       help="For more information visit https://github.com/sclorg/s2i-${NAME}-container" \
-      usage="s2i build https://github.com/sclorg/s2i-php-container.git --context-dir=${PHP_VERSION}/test/test-app ubi8/${NAME}-${PHP_VER_SHORT} sample-server" \
+      usage="s2i build https://github.com/sclorg/s2i-php-container.git --context-dir=${PHP_VERSION}/test/test-app centos8/${NAME}-${PHP_VER_SHORT} sample-server" \
       maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
 # Enable EPEL, Remi and Yarn Repository on CentOS/RHEL
@@ -45,15 +45,16 @@ RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
     dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm && \
     curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo
 
-# Install Apache httpd and PHP
-RUN yum -y module enable php:remi-$PHP_VERSION && \
+# Install Apache httpd, PHP, nodejs and yarn
+RUN yum -y module enable php:remi-$PHP_VERSION nodejs:$NODEJS_VERSION && \
     INSTALL_PKGS="php php-mysqlnd php-pgsql php-bcmath \
                   php-gd php-intl php-ldap php-mbstring php-pdo \
                   php-process php-soap php-opcache php-xml \
                   php-gmp php-pecl-apcu mod_ssl hostname \
-                  php-ldap yarn" && \
+                  php-ldap php-pecl-igbinary php-pecl-imagick-im6 \
+                  php-pecl-redis5 php-phpiredis php-pecl-zip yarn" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
-    yum reinstall -y tzdata && \
+    yum install -y tzdata nodejs && \
     rpm -V $INSTALL_PKGS && \
     yum -y clean all --enablerepo='*'
 
@@ -78,7 +79,7 @@ RUN INSTALL_PREREQUIS="gcc-c++ gcc php-devel php-pear yum-utils" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PREREQUIS --nogpgcheck && \
     rpm -V $INSTALL_PREREQUIS && \
     yum -y clean all --enablerepo='*'
-    
+
 # CA for cURL
 RUN echo curl.cainfo="/etc/ssl/certs/ca-bundle.crt" >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-curl.ini
 
@@ -89,9 +90,7 @@ RUN pecl install mongodb && \
 # MSSQL
 RUN curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/mssql-release.repo && \
     yum -y remove unixODBC-utf16 unixODBC-utf16-devel && \
-    dnf install --allowerasing -y https://rpmfind.net/linux/centos/8-stream/BaseOS/x86_64/os/Packages/libcom_err-1.45.6-1.el8.x86_64.rpm \ 
-                                  https://rpmfind.net/linux/centos/8-stream/BaseOS/x86_64/os/Packages/e2fsprogs-libs-1.45.6-1.el8.x86_64.rpm \
-                                  https://rpmfind.net/linux/centos/8.3.2011/BaseOS/x86_64/os/Packages/e2fsprogs-1.45.6-1.el8.x86_64.rpm && \
+    yum -y install libcom_err e2fsprogs-libs e2fsprogs && \
     ACCEPT_EULA=Y yum  -y install msodbcsql17 && \
     ACCEPT_EULA=Y yum -y install mssql-tools && \
     yum -y install unixODBC-devel && \

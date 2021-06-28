@@ -58,6 +58,18 @@ if [ -f composer.json ]; then
   fi
 fi
 
+# install yarn modules
+if [ -f yarn.lock ]; then
+  echo "Found 'yarn.lock', installing dependencies using yarn... "
+
+  yarn config set network-timeout 300000
+  yarn install --pure-lockfile
+  yarn run buildall
+  yarn cache clean
+
+fi
+
+
 # post-assemble files
 process_extending_files ./php-post-assemble/ ${PHP_CONTAINER_SCRIPTS_PATH}/post-assemble/
 
